@@ -62,7 +62,7 @@ void GeneticAlgorithm::Mutate()
 {
 	for (int i = 0; i < population.size(); i++)
 	{
-		if (rand() / RAND_MAX < geneticParameters->GetMutationProbability) 
+		if (rand() / RAND_MAX < geneticParameters->GetMutationProbability()) 
 		{
 			auto originalOrganism = population.at(i);
 			auto mutantOrganism = ProduceMutant(originalOrganism);
@@ -89,10 +89,33 @@ struct inverseOrderStruct {
 void GeneticAlgorithm::NaturalSelect()
 {
 	std::vector<int> notFightedYet;
-	
-	std::set<int,inverseOrderStruct> diedOrganism;
+	for (int i = 0; i < population.size(); i++)
+	{
+		notFightedYet.push_back(i);
+	}
+	std::set<int,inverseOrderStruct> diedOrganisms;
 	for (int i = 0; i < geneticParameters->GetReproductionNumber()*2; i++)
 	{
-
+		int randomFighterIndex1 = rand() % notFightedYet.size();
+		int fighterIndex1 = notFightedYet.at(randomFighterIndex1);
+		notFightedYet.erase(notFightedYet.begin() + randomFighterIndex1);
+		int randomFighterIndex2 = rand() % notFightedYet.size();
+		int fighterIndex2 = notFightedYet.at(randomFighterIndex2);
+		notFightedYet.erase(notFightedYet.begin() + randomFighterIndex2);
+		int deathIndex;
+		if (rand() / RAND_MAX < geneticParameters->GetBadOrganizmDeathProbability()) 		
+		{
+			deathIndex = (MeasureFitness(population.at(fighterIndex1)) < MeasureFitness(population.at(fighterIndex2))) ? fighterIndex1 : fighterIndex2;
+		}
+		else 
+		{
+			deathIndex = (MeasureFitness(population.at(fighterIndex1)) < MeasureFitness(population.at(fighterIndex2))) ? fighterIndex2 : fighterIndex1;
+		}
+		diedOrganisms.insert(deathIndex);
 	}
+	while (!diedOrganisms.empty()) {
+		population.erase(population.begin()+ *diedOrganisms.begin());
+		diedOrganisms.erase(diedOrganisms.begin());
+	}
+	
 }
