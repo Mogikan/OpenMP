@@ -2,16 +2,12 @@
 
 class Organism
 {
-public:	
-	Organism(int statesCount,int length);
-	Organism(int* organismGenes, int statesCount);
+public:
+
+Organism();
 	~Organism();
-	Organism* Mutate();
-	virtual Organism* CreateOrganism(int* genes, int statesCount) = 0;
-	virtual double MeasureFitness() = 0;
-private:
-	int* organismGenes;
-	int GetLength();
-	int statesCount;	
+	virtual Organism* Mutate() = 0;
+	virtual Organism* CreateOrganism() = 0;
+	virtual double MeasureFitness() = 0;	
 };
 
