@@ -14,7 +14,7 @@ double TaskDescriptor::GetFinishTime()
 	return startTime + task->GetExecutionTime();
 }
 
-double TaskDescriptor::SetStartTime(double startTime)
+void TaskDescriptor::SetStartTime(double startTime)
 {
 	this->startTime = startTime;
 	completed = true;

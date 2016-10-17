@@ -6,7 +6,7 @@ public:
 	TaskDescriptor(Task* task);
 	~TaskDescriptor();
 	double GetFinishTime();
-	double SetStartTime(double startTime);
+	void SetStartTime(double startTime);
 	Task* GetTask();
 private:
 	Task* task;

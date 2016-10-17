@@ -26,7 +26,7 @@ void PCTaskDescriptorList::ConsumeTask(double taskStartTime)
 
 bool PCTaskDescriptorList::HasNotConsumedTask()
 {
-	currentIndex < taskDescriptorList.size();
+	return currentIndex < taskDescriptorList.size();
 }
 
 double PCTaskDescriptorList::GetConsumedTime()

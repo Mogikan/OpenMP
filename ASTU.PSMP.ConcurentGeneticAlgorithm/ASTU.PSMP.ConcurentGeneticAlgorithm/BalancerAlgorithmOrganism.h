@@ -17,6 +17,6 @@ private:
 
 	// Inherited via Organism
 	BalancerAlgorithmOrganism*  CreateOrganism();
-	virtual double MeasureFitness() override;
+	virtual double MeasureFitness();
 };
 
