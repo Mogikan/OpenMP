@@ -1,16 +1,22 @@
 #pragma once
 #include "GeneticAlgorithm.h"
+#include "TaskList.h"
+#include "BalancerAlgorithmOrganism.h"
 class LoadBalancingAlgorithm :
 	public GeneticAlgorithm
 {
 public:
-	LoadBalancingAlgorithm(GeneticAlgorithmParameters * geneticParameters);
+	LoadBalancingAlgorithm(GeneticAlgorithmParameters * geneticParameters, TaskList* tasklist);
 	~LoadBalancingAlgorithm();
 
 	// Inherited via GeneticAlgorithm
-	virtual Organism * CreateOrganism() override;
-	virtual std::pair<Organism*, Organism*> ProduceChildren(Organism * parent1, Organism * parent2) override;
-	virtual Organism * ProduceMutant(Organism * organism) override;
-	virtual double MeasureFitness(Organism * organism) override;
+	virtual BalancerAlgorithmOrganism * CreateOrganism() override;
+	virtual std::pair<BalancerAlgorithmOrganism*, BalancerAlgorithmOrganism*> ProduceChildren(BalancerAlgorithmOrganism * parent1, BalancerAlgorithmOrganism * parent2) override;
+	virtual BalancerAlgorithmOrganism * ProduceMutant(BalancerAlgorithmOrganism * organism) override;
+	virtual double MeasureFitness(BalancerAlgorithmOrganism * organism) override;
+private:
+	const int PCCount = 5;
+	GeneticAlgorithmParameters* geneticParameters;
+	TaskList* tasks;
 };
 

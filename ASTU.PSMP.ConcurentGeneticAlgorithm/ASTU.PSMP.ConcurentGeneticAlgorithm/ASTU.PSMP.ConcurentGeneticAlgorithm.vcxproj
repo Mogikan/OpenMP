@@ -120,7 +120,6 @@
     <ClCompile Include="Task.cpp" />
     <ClCompile Include="TaskDescriptor.cpp" />
     <ClCompile Include="TaskDescriptorList.cpp" />
-    <ClCompile Include="TaskGraph.cpp" />
     <ClCompile Include="TaskList.cpp" />
   </ItemGroup>
   <ItemGroup>

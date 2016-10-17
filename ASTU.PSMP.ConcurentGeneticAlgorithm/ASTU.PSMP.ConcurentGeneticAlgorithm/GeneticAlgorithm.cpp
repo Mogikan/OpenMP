@@ -47,10 +47,10 @@ void GeneticAlgorithm::ProduceChildren()
 	{
 
 		int parent1Index = rand() % notUsedOrganisms.size();
-		Organism* parent1Organism = population.at(notUsedOrganisms.at(parent1Index));
+		BalancerAlgorithmOrganism* parent1Organism = population.at(notUsedOrganisms.at(parent1Index));
 		notUsedOrganisms.erase(notUsedOrganisms.begin() + parent1Index);
 		int parent2Index = rand() % notUsedOrganisms.size();
-		Organism* parent2Organism = population.at(notUsedOrganisms.at(parent2Index));
+		BalancerAlgorithmOrganism* parent2Organism = population.at(notUsedOrganisms.at(parent2Index));
 		notUsedOrganisms.erase(notUsedOrganisms.begin() + parent2Index);
 		auto children = ProduceChildren(parent1Organism, parent2Organism);
 		population.push_back(children.first);
@@ -66,7 +66,7 @@ void GeneticAlgorithm::Mutate()
 		{
 			auto originalOrganism = population.at(i);
 			auto mutantOrganism = ProduceMutant(originalOrganism);
-			Organism* leftOrganism;
+			BalancerAlgorithmOrganism* leftOrganism;
 			if (rand() / RAND_MAX < geneticParameters->GetGoodOrganizmSurvivalProbability())
 			{
 				leftOrganism = MeasureFitness(mutantOrganism) > MeasureFitness(originalOrganism) ? mutantOrganism : originalOrganism;

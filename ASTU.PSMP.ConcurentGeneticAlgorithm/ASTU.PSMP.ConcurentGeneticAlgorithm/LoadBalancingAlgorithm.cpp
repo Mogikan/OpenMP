@@ -2,9 +2,10 @@
 
 
 
-LoadBalancingAlgorithm::LoadBalancingAlgorithm(GeneticAlgorithmParameters* geneticParameters):GeneticAlgorithm(geneticParameters)
+LoadBalancingAlgorithm::LoadBalancingAlgorithm(GeneticAlgorithmParameters* geneticParameters,TaskList* tasklist):GeneticAlgorithm(geneticParameters)
 {
-	
+	this->geneticParameters = geneticParameters;
+	this->tasks = tasklist;
 }
 
 
@@ -12,22 +13,22 @@ LoadBalancingAlgorithm::~LoadBalancingAlgorithm()
 {
 }
 
-Organism * LoadBalancingAlgorithm::CreateOrganism()
+BalancerAlgorithmOrganism * LoadBalancingAlgorithm::CreateOrganism()
+{
+	return new BalancerAlgorithmOrganism(this->tasks,this->PCCount);
+}
+
+std::pair<BalancerAlgorithmOrganism*, BalancerAlgorithmOrganism*> LoadBalancingAlgorithm::ProduceChildren(BalancerAlgorithmOrganism * parent1, BalancerAlgorithmOrganism * parent2)
+{
+	return std::pair<BalancerAlgorithmOrganism*, BalancerAlgorithmOrganism*>();
+}
+
+BalancerAlgorithmOrganism * LoadBalancingAlgorithm::ProduceMutant(BalancerAlgorithmOrganism * organism)
 {
 	return nullptr;
 }
 
-std::pair<Organism*, Organism*> LoadBalancingAlgorithm::ProduceChildren(Organism * parent1, Organism * parent2)
-{
-	return std::pair<Organism*, Organism*>();
-}
-
-Organism * LoadBalancingAlgorithm::ProduceMutant(Organism * organism)
-{
-	return nullptr;
-}
-
-double LoadBalancingAlgorithm::MeasureFitness(Organism * organism)
+double LoadBalancingAlgorithm::MeasureFitness(BalancerAlgorithmOrganism * organism)
 {
 	return 0.0;
 }

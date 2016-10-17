@@ -2,10 +2,11 @@
 
 
 
-BalancerAlgorithmOrganism::BalancerAlgorithmOrganism()
+BalancerAlgorithmOrganism::BalancerAlgorithmOrganism(TaskList * tasks,int pcCount)
 {
+	this->tasks = tasks;
+	this->pcCount = pcCount;
 }
-
 
 BalancerAlgorithmOrganism::~BalancerAlgorithmOrganism()
 {
@@ -13,6 +14,18 @@ BalancerAlgorithmOrganism::~BalancerAlgorithmOrganism()
 
 BalancerAlgorithmOrganism * BalancerAlgorithmOrganism::CreateOrganism()
 {
+	auto allTasks = tasks->GetAllTasks();
+	for (int i = 0; i < pcCount; i++)
+	{
+		pcList.push_back(new PCTaskDescriptorList());
+	}
+	for (int i = 0; i < allTasks.size(); i++)
+	{
+		auto pcForTask = rand() % pcCount;
+		std::list<PCTaskDescriptorList*>::iterator it = std::next(pcList.begin(), pcForTask);
+		(*it)->AddTask(allTasks.at(i));
+	}
+	return this;
 }
 
 double BalancerAlgorithmOrganism::MeasureFitness()
@@ -20,6 +33,7 @@ double BalancerAlgorithmOrganism::MeasureFitness()
 	std::list < PCTaskDescriptorList* > ::iterator iterator,iteratorCopy;
 	std::unordered_map<int,TaskDescriptor*> countedTasks;
 	bool breakIteration = false;
+	double maxExecutionTime = -DBL_MAX;
 	for (iterator = pcList.begin(); iterator != pcList.end(); (breakIteration)?iterator:iterator++)
 	{
 		auto pc = (*iterator);
@@ -62,5 +76,8 @@ double BalancerAlgorithmOrganism::MeasureFitness()
 			}
 			pc->ConsumeTask(startTime);
 		}
+
+		maxExecutionTime = max(pc->GetConsumedTime(), maxExecutionTime);
 	}
+	return maxExecutionTime;
 }

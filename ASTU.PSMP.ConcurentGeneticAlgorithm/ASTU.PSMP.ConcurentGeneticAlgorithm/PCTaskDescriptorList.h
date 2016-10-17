@@ -10,6 +10,7 @@ public:
 	void ConsumeTask(double taskStartTime);
 	bool HasNotConsumedTask();
 	double GetConsumedTime();
+	void AddTask(Task* task);
 private:
 	int currentIndex = 0;
 	double consumedTime;

@@ -33,3 +33,8 @@ double PCTaskDescriptorList::GetConsumedTime()
 {
 	return consumedTime;
 }
+
+void PCTaskDescriptorList::AddTask(Task * task)
+{
+	taskDescriptorList.push_back(new TaskDescriptor(task));
+}

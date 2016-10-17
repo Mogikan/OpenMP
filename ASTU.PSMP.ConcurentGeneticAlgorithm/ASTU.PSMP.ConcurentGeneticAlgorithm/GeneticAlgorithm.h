@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
-#include "Organism.h"
+#include "BalancerAlgorithmOrganism.h"
 #include "GeneticAlgorithmParameters.h"
+
 class GeneticAlgorithm
 {
 public:	
@@ -9,16 +10,16 @@ public:
 	~GeneticAlgorithm();
 	void Execute(GeneticAlgorithmParameters* geneticAlgorithmParameters);
 private:
-	std::vector<Organism *> population;
+	std::vector<BalancerAlgorithmOrganism *> population;
 	void InitPopulation();
 	void ExecuteStep();
 	void ProduceChildren();
 	void Mutate();
 	void NaturalSelect();
-	virtual Organism* CreateOrganism() = 0;
-	virtual std::pair<Organism*, Organism*> ProduceChildren(Organism* parent1, Organism* parent2) = 0;
-	virtual Organism* ProduceMutant(Organism* organism) = 0;
-	virtual double MeasureFitness(Organism* organism) = 0;
+	virtual BalancerAlgorithmOrganism* CreateOrganism() = 0;
+	virtual std::pair<BalancerAlgorithmOrganism*, BalancerAlgorithmOrganism*> ProduceChildren(BalancerAlgorithmOrganism* parent1, BalancerAlgorithmOrganism* parent2) = 0;
+	virtual BalancerAlgorithmOrganism* ProduceMutant(BalancerAlgorithmOrganism* organism) = 0;
+	virtual double MeasureFitness(BalancerAlgorithmOrganism* organism) = 0;
 	GeneticAlgorithmParameters* geneticParameters;
 };
 
