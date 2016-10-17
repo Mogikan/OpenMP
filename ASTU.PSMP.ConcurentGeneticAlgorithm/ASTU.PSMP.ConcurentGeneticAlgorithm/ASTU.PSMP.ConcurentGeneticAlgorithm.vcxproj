@@ -120,6 +120,7 @@
     <ClCompile Include="Task.cpp" />
     <ClCompile Include="TaskDescriptor.cpp" />
     <ClCompile Include="TaskDescriptorList.cpp" />
+    <ClCompile Include="TaskGraph.cpp" />
     <ClCompile Include="TaskList.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +133,7 @@
     <ClInclude Include="Task.h" />
     <ClInclude Include="TaskDescriptor.h" />
     <ClInclude Include="TaskDescriptorList.h" />
+    <ClInclude Include="TaskGraph.h" />
     <ClInclude Include="TaskList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

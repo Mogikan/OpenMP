@@ -3,11 +3,14 @@
 class Task
 {
 public:
-	Task(double executionTime,int taskNumber);
+	Task();
+	Task(double executionTime,int taskNumber);	
 	~Task();
 	int GetTaskNumber();
 	double GetExecutionTime();
+	void SetExecutionTime(double executionTime);
 	std::vector < Task* > GetPrecedingTasks();
+	void AddPrecedingTask(Task* task);
 private:
 	double taskNumber;
 	std::vector<Task*> precedingTasks;

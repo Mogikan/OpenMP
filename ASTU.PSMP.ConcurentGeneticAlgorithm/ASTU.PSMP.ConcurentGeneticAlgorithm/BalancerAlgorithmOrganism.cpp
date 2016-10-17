@@ -13,7 +13,6 @@ BalancerAlgorithmOrganism::~BalancerAlgorithmOrganism()
 
 BalancerAlgorithmOrganism * BalancerAlgorithmOrganism::CreateOrganism()
 {
-
 }
 
 double BalancerAlgorithmOrganism::MeasureFitness()
