@@ -21,9 +21,6 @@
     <ClCompile Include="GeneticAlgorithm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Organism.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneticAlgorithmParameters.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -53,9 +50,6 @@
     <ClInclude Include="GeneticAlgorithm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Organism.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GeneticAlgorithmParameters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -78,9 +72,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PCTaskDescriptorList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TaskGraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

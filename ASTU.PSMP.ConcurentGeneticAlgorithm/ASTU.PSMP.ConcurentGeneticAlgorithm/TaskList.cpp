@@ -21,6 +21,11 @@ std::vector<Task*> TaskList::GetAllTasks()
 	return this->taskList;
 }
 
+int TaskList::Size()
+{
+	return taskList.size();
+}
+
 Task * TaskList::GetTaskByNumber(int taskNumber)
 {
 	std::vector<Task*>::iterator iterator = std::find_if(taskList.begin(), taskList.end(), [taskNumber](Task* task) -> bool { return task->GetTaskNumber() == taskNumber; });

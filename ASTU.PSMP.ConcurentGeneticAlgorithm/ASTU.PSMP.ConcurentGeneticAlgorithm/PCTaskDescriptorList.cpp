@@ -7,8 +7,20 @@ PCTaskDescriptorList::PCTaskDescriptorList()
 }
 
 
+
+
 PCTaskDescriptorList::~PCTaskDescriptorList()
 {
+}
+
+PCTaskDescriptorList * PCTaskDescriptorList::Clone()
+{
+	auto result = new PCTaskDescriptorList();
+	for (int i = 0; i < taskDescriptorList.size(); i++)
+	{
+		result->AddTask(taskDescriptorList.at(i)->GetTask());
+	}
+	return result;
 }
 
 

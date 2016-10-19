@@ -6,6 +6,7 @@ class PCTaskDescriptorList :
 public:
 	PCTaskDescriptorList();
 	~PCTaskDescriptorList();
+	PCTaskDescriptorList* Clone();
 	TaskDescriptor* GetCurrentTask();
 	void ConsumeTask(double taskStartTime);
 	bool HasNotConsumedTask();

@@ -25,10 +25,10 @@ std::pair<BalancerAlgorithmOrganism*, BalancerAlgorithmOrganism*> LoadBalancingA
 
 BalancerAlgorithmOrganism * LoadBalancingAlgorithm::ProduceMutant(BalancerAlgorithmOrganism * organism)
 {
-	return nullptr;
+	return organism->Mutate();
 }
 
 double LoadBalancingAlgorithm::MeasureFitness(BalancerAlgorithmOrganism * organism)
 {
-	return 0.0;
+	return organism->MeasureFitness();
 }

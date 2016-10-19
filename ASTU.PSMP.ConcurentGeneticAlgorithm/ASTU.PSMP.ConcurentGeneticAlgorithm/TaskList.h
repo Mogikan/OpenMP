@@ -12,6 +12,7 @@ public:
 	TaskList(std::vector<Task*> tasks);
 	~TaskList();
 	std::vector < Task*> GetAllTasks();
+	int Size();
 	Task* GetTaskByNumber(int taskNumber);
 	static TaskList* FromFile(std::string filePath);
 private:

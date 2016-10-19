@@ -8,6 +8,14 @@ BalancerAlgorithmOrganism::BalancerAlgorithmOrganism(TaskList * tasks,int pcCoun
 	this->pcCount = pcCount;
 }
 
+BalancerAlgorithmOrganism::BalancerAlgorithmOrganism(std::list<PCTaskDescriptorList*> newPCList, TaskList * taskList, int pcCount)
+{
+	this->pcList = newPCList;
+	this->pcCount = pcCount;
+	this->tasks = taskList;
+}
+
+
 BalancerAlgorithmOrganism::~BalancerAlgorithmOrganism()
 {
 }
@@ -81,3 +89,62 @@ double BalancerAlgorithmOrganism::MeasureFitness()
 	}
 	return maxExecutionTime;
 }
+
+PCTaskDescriptorList* GetTaskPC(int taskNumber, std::list<PCTaskDescriptorList*> newPCList)
+{
+
+	for (std::list<PCTaskDescriptorList*>::iterator iterator = newPCList.begin(); iterator != newPCList.end(); ++iterator)
+	{
+		if ((*iterator)->ContainsTask(taskNumber))
+		{
+			return (*iterator);
+		}
+	}
+}
+
+BalancerAlgorithmOrganism * BalancerAlgorithmOrganism::Mutate()
+{
+	auto newPCList = ClonePCList();
+	vector<int> leftMutationTasks;
+	for (int i = 0; i < tasks->Size(); i++)
+	{
+		leftMutationTasks.push_back(i);
+	}
+	int pairsCount = leftMutationTasks.size()/2;
+	for (int i = 0; i < pairsCount; i++)
+	{
+		//TODO: get from genetic parameters
+		if (rand() / RAND_MAX < 0.95)
+		{
+			continue;
+		}
+		int taskIndex1 = leftMutationTasks.at(rand() % leftMutationTasks.size());
+		int task1 = leftMutationTasks.at(taskIndex1);
+		leftMutationTasks.erase(leftMutationTasks.begin() + taskIndex1);
+
+		int taskIndex2 = leftMutationTasks.at(rand() % leftMutationTasks.size());
+		int task2 = leftMutationTasks.at(taskIndex2);
+		leftMutationTasks.erase(leftMutationTasks.begin() + taskIndex2);
+
+		PCTaskDescriptorList* pc1 = GetTaskPC(task1, newPCList);
+		PCTaskDescriptorList* pc2 = GetTaskPC(task2, newPCList);
+		auto firstIndex = pc1->GetTaskIndex(task1);
+		auto secondIndex = pc2->GetTaskIndex(task2);
+		auto taskDescriptor1 = pc1->GetTaskAtIndex(firstIndex);
+		auto taskDescriptor2 = pc2->GetTaskAtIndex(secondIndex);
+		pc1->ReplaceTaskDescriptor(firstIndex, taskDescriptor2);
+		pc2->ReplaceTaskDescriptor(firstIndex, taskDescriptor1);
+	}
+	return new BalancerAlgorithmOrganism(newPCList, tasks, pcCount);
+}
+
+std::list<PCTaskDescriptorList*> BalancerAlgorithmOrganism::ClonePCList()
+{
+	auto pcList = std::list<PCTaskDescriptorList*>();
+	for (std::list<PCTaskDescriptorList*>::iterator iterator = pcList.begin(); iterator != pcList.end(); ++iterator)
+	{
+		pcList.push_back((*iterator)->Clone());
+	}
+	return pcList;
+}
+

@@ -12,13 +12,17 @@ class BalancerAlgorithmOrganism
 {
 public:
 	BalancerAlgorithmOrganism(TaskList* tasks,int pcCount);
+	BalancerAlgorithmOrganism(std::list<PCTaskDescriptorList*> newPCList, TaskList* taskList, int pcCount);
 	~BalancerAlgorithmOrganism();
+	virtual double MeasureFitness();
+	BalancerAlgorithmOrganism* CreateOrganism();
+	BalancerAlgorithmOrganism* Mutate();
+
 private:
 	std::list<PCTaskDescriptorList*> pcList;
 	TaskList* tasks;
-	int pcCount;
-	// Inherited via Organism
-	BalancerAlgorithmOrganism*  CreateOrganism();
-	virtual double MeasureFitness();
+	int pcCount;		
+	std::list<PCTaskDescriptorList*> ClonePCList();
+
 };
 
