@@ -17,7 +17,7 @@ public:
 	virtual double MeasureFitness();
 	BalancerAlgorithmOrganism* CreateOrganism();
 	BalancerAlgorithmOrganism* Mutate();
-
+	static std::pair<BalancerAlgorithmOrganism*, BalancerAlgorithmOrganism*> ProduceChildren(BalancerAlgorithmOrganism * parent1, BalancerAlgorithmOrganism * parent2, TaskList* tasks, int pcNumber);
 private:
 	std::list<PCTaskDescriptorList*> pcList;
 	TaskList* tasks;

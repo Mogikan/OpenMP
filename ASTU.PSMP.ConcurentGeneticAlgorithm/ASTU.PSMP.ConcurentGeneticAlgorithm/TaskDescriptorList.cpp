@@ -34,9 +34,19 @@ TaskDescriptor * TaskDescriptorList::GetTaskAtIndex(int index)
 	return taskDescriptorList[index];
 }
 
+int TaskDescriptorList::Size()
+{
+	return this->taskDescriptorList.size();
+}
+
 void TaskDescriptorList::ReplaceTaskDescriptor(int index, TaskDescriptor * task)
 {
 	taskDescriptorList[index] = task;
+}
+
+void TaskDescriptorList::RemoveTaskDescriptorAtIndex(int index)
+{	
+	taskDescriptorList.erase(taskDescriptorList.begin() + index);
 }
 
 bool TaskDescriptorList::ContainsTask(int taskNumber)
