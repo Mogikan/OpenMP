@@ -5,7 +5,7 @@
 LoadBalancingAlgorithm::LoadBalancingAlgorithm(GeneticAlgorithmParameters* geneticParameters,TaskList* tasklist):GeneticAlgorithm(geneticParameters)
 {
 	this->geneticParameters = geneticParameters;
-	this->tasks = tasklist;
+	this->tasks = tasklist;	
 }
 
 

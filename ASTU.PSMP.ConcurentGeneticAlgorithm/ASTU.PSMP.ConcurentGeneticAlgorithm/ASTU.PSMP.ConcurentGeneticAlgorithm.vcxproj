@@ -115,6 +115,7 @@
     <ClCompile Include="GeneticAlgorithm.cpp" />
     <ClCompile Include="GeneticAlgorithmParameters.cpp" />
     <ClCompile Include="LoadBalancingAlgorithm.cpp" />
+    <ClCompile Include="ParallelBalanceAlgorithm.cpp" />
     <ClCompile Include="PCTaskDescriptorList.cpp" />
     <ClCompile Include="Task.cpp" />
     <ClCompile Include="TaskDescriptor.cpp" />
@@ -126,6 +127,7 @@
     <ClInclude Include="GeneticAlgorithm.h" />
     <ClInclude Include="GeneticAlgorithmParameters.h" />
     <ClInclude Include="LoadBalancingAlgorithm.h" />
+    <ClInclude Include="ParallelBalanceAlgorithm.h" />
     <ClInclude Include="PCTaskDescriptorList.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="TaskDescriptor.h" />

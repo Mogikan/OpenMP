@@ -12,10 +12,27 @@ GeneticAlgorithm::~GeneticAlgorithm()
 {
 }
 
-void GeneticAlgorithm::Execute(GeneticAlgorithmParameters* geneticAlgorithmParameters)
+BalancerAlgorithmOrganism * GeneticAlgorithm::SelectBest()
+{	
+	return *std::max_element(population.begin(), population.end(), [](BalancerAlgorithmOrganism* a, BalancerAlgorithmOrganism* b)->double { return a->MeasureFitness()<b->MeasureFitness(); });
+}
+
+int GeneticAlgorithm::GetWorstIndex()
+{
+	return std::min_element(population.begin(), population.end(), [](BalancerAlgorithmOrganism* a, BalancerAlgorithmOrganism* b)->double { return a->MeasureFitness() < b->MeasureFitness(); }) - population.begin();
+}
+
+
+void GeneticAlgorithm::ReplaceWorst(BalancerAlgorithmOrganism * organism)
+{
+	population[GetWorstIndex()] = organism;
+
+}
+
+void GeneticAlgorithm::Execute()
 {
 	InitPopulation();
-	for (int i = 0; i < geneticAlgorithmParameters->GetGenerationCount(); i++)
+	for (int i = 0; i < geneticParameters->GetGenerationCount(); i++)
 	{
 		ExecuteStep();
 	}

@@ -138,33 +138,33 @@ BalancerAlgorithmOrganism * BalancerAlgorithmOrganism::Mutate()
 	return new BalancerAlgorithmOrganism(newPCList, tasks, pcCount);
 }
 
-void MarkUsedTasks(std::list<PCTaskDescriptorList> taskList, std::vector<bool> usedTasks)
+void MarkUsedTasks(std::list<PCTaskDescriptorList*> taskList, std::vector<bool> usedTasks)
 {
 	for (auto iterator = taskList.begin(); iterator != taskList.end(); iterator++)
 	{
-		for (int i = 0; i < iterator->Size(); i++)
+		for (int i = 0; i < (*iterator)->Size(); i++)
 		{
-			usedTasks[iterator->GetTaskAtIndex(i)->GetTask()->GetTaskNumber()] = true;
+			usedTasks[(*iterator)->GetTaskAtIndex(i)->GetTask()->GetTaskNumber()] = true;
 		}		
 	}
 }
 
 
-void RemoveUsedTasks(std::list<PCTaskDescriptorList> taskList, std::vector<bool> usedTasks)
+void RemoveUsedTasks(std::list<PCTaskDescriptorList*> taskList, std::vector<bool> usedTasks)
 {
 	for (auto iterator = taskList.begin(); iterator != taskList.end(); iterator++)
 	{
-		for (int i = 0; i < iterator->Size(); i++)
+		for (int i = 0; i < (*iterator)->Size(); i++)
 		{
-			if (usedTasks[iterator->GetTaskAtIndex(i)->GetTask()->GetTaskNumber()])
+			if (usedTasks[(*iterator)->GetTaskAtIndex(i)->GetTask()->GetTaskNumber()])
 			{
-				iterator->RemoveTaskDescriptorAtIndex(i);
+				(*iterator)->RemoveTaskDescriptorAtIndex(i);
 			}
 		}
 	}
 }
 
-void AddLeftTasks(std::list<PCTaskDescriptorList> taskList, std::vector<bool> usedTasks, TaskList* tasks, int listSize)
+void AddLeftTasks(std::list<PCTaskDescriptorList*> taskList, std::vector<bool> usedTasks, TaskList* tasks, int listSize)
 {
 	std::vector<Task*> allTasks = tasks->GetAllTasks();
 	for (int i = 0; i < allTasks.size(); i++)
@@ -175,27 +175,22 @@ void AddLeftTasks(std::list<PCTaskDescriptorList> taskList, std::vector<bool> us
 			int destinationIndex = rand() % listSize;
 			auto destinationNode = taskList.begin();
 			std::next(destinationNode, destinationIndex);
-			destinationNode->AddTask(task);
+			(*destinationNode)->AddTask(task);
 		}
 	}
 }
 
 std::pair<BalancerAlgorithmOrganism*, BalancerAlgorithmOrganism*> BalancerAlgorithmOrganism::ProduceChildren(BalancerAlgorithmOrganism * parent1, BalancerAlgorithmOrganism * parent2,TaskList* tasks, int pcNumber)
 {
-	int slicePosition = rand() % (pcNumber - 2) + 1;//except 0 and max
-	auto parent1PCList = parent1->pcList;
-	auto parent2PCList = parent2->pcList;
-	auto genesSlicePosition = std::next(parent1PCList.begin(), slicePosition);
-	//TODO: clone descriptors
-	std::list<PCTaskDescriptorList> child1PartOne(parent1PCList.begin(), genesSlicePosition);
-	//TODO: clone descriptors
-	std::list<PCTaskDescriptorList> child1PartTwo(genesSlicePosition,parent1PCList.end());	
-	//TODO: clone descriptors
-	std::list<PCTaskDescriptorList> child2PartOne(parent2PCList.begin(), genesSlicePosition);
-	//TODO: clone descriptors
-	std::list<PCTaskDescriptorList> child2PartTwo(genesSlicePosition, parent2PCList.end());
-	
-	std::vector<bool> usedTasksChild1;
+	int slicePosition = rand() % (pcNumber - 2) + 1;//except 0 and max	
+	auto parent1PCList = parent1->ClonePCList();
+	auto parent2PCList = parent2->ClonePCList();
+	auto genesSlicePosition = std::next(parent1PCList.begin(), slicePosition);	
+	std::list<PCTaskDescriptorList*> child1PartOne(parent1PCList.begin(), genesSlicePosition);
+	std::list<PCTaskDescriptorList*> child1PartTwo(genesSlicePosition,parent1PCList.end());
+	std::list<PCTaskDescriptorList*> child2PartOne(parent2PCList.begin(), genesSlicePosition);
+	std::list<PCTaskDescriptorList*> child2PartTwo(genesSlicePosition, parent2PCList.end());
+		std::vector<bool> usedTasksChild1;
 	for (int i = 0; i < tasks->Size(); i++)
 	{
 		usedTasksChild1.push_back(false);

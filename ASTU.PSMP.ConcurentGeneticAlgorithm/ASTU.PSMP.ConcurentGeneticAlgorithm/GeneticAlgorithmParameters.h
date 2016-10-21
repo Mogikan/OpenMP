@@ -3,6 +3,7 @@ class GeneticAlgorithmParameters
 {
 public:
 	GeneticAlgorithmParameters();
+	GeneticAlgorithmParameters(const GeneticAlgorithmParameters &original);
 	~GeneticAlgorithmParameters();
 	int GetInitialPopulationSize();
 	int GetGenerationCount();

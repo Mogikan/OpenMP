@@ -6,6 +6,17 @@ GeneticAlgorithmParameters::GeneticAlgorithmParameters()
 {
 }
 
+GeneticAlgorithmParameters::GeneticAlgorithmParameters(const GeneticAlgorithmParameters & original)
+{
+	this->SetInitialPopulationSize(original.initialPopulationSize);
+	this->SetGenerationCount(original.generationCount);
+	this->SetReproductionNumber(original.reproductionNumber);
+	this->SetMutationProbability(original.mutationProbability);
+	this->SetGoodOrganizmSurvivalProbability(original.goodOrganizmSurvivalProbability);
+	this->SetBadOrganizmDeathProbability(original.badOrganizmDeathProbability);
+	this->SetOrganismStatesCount(original.organismStatesCount);
+}
+
 
 GeneticAlgorithmParameters::~GeneticAlgorithmParameters()
 {
