@@ -1,11 +1,13 @@
 #include <iostream>
 #include "ParallelBalanceAlgorithm.h"
 #include <memory>
+#include <time.h>
 using namespace std;
 
 int main()
 {
 	cout << "Hello world\n";
+	srand(time(NULL));
 	std::shared_ptr<GeneticAlgorithmParameters> geneticParameters(new GeneticAlgorithmParameters());
 	geneticParameters->SetInitialPopulationSize(10);
 	geneticParameters->SetGenerationCount(100);

@@ -16,7 +16,7 @@ public:
 	std::vector <shared_ptr<Task>> GetPrecedingTasks();
 	void AddPrecedingTask(shared_ptr<Task> task);
 private:
-	double taskNumber;
+	int taskNumber;
 	std::vector<shared_ptr<Task>> precedingTasks;
 	double executionTime;
 };

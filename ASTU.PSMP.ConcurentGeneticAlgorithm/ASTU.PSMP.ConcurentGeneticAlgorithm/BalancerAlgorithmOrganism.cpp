@@ -122,7 +122,7 @@ shared_ptr<BalancerAlgorithmOrganism> BalancerAlgorithmOrganism::Mutate()
 	for (int i = 0; i < pairsCount; i++)
 	{
 		//TODO: get from genetic parameters
-		if (rand() / RAND_MAX < 0.95)
+		if (((double)rand()) / RAND_MAX < 0.95)
 		{
 			continue;
 		}
@@ -228,11 +228,11 @@ std::pair<shared_ptr<BalancerAlgorithmOrganism>, shared_ptr<BalancerAlgorithmOrg
 
 std::list<shared_ptr<PCTaskDescriptorList>> BalancerAlgorithmOrganism::ClonePCList()
 {
-	auto pcList = std::list<shared_ptr<PCTaskDescriptorList>>();
+	auto result = std::list<shared_ptr<PCTaskDescriptorList>>();
 	for (std::list<shared_ptr<PCTaskDescriptorList>>::iterator iterator = pcList.begin(); iterator != pcList.end(); ++iterator)
 	{
-		pcList.push_back((*iterator)->Clone());
+		result.push_back((*iterator)->Clone());
 	}
-	return pcList;
+	return result;
 }
 
