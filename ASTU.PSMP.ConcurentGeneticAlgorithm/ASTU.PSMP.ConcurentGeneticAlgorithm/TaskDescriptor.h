@@ -1,15 +1,17 @@
 #pragma once
 #include "Task.h"
+#include <memory>
+using namespace std;
 class TaskDescriptor
 {
 public:
-	TaskDescriptor(Task* task);
+	TaskDescriptor(shared_ptr<Task> task);
 	~TaskDescriptor();
 	double GetFinishTime();
 	void SetStartTime(double startTime);
-	Task* GetTask();
+	shared_ptr<Task> GetTask();
 private:
-	Task* task;
+	shared_ptr<Task> task;
 	double startTime;
 	bool completed = false;
 };

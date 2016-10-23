@@ -5,24 +5,24 @@
 #include "Task.h"
 #include "TaskList.h"
 #include "PCTaskDescriptorList.h"
-
+#include <memory>
 using namespace std;
 class BalancerAlgorithmOrganism
 	
 {
 public:
-	BalancerAlgorithmOrganism(TaskList* tasks,int pcCount);
-	BalancerAlgorithmOrganism(std::list<PCTaskDescriptorList*> newPCList, TaskList* taskList, int pcCount);
+	BalancerAlgorithmOrganism(shared_ptr<TaskList> tasks,int pcCount);
+	BalancerAlgorithmOrganism(std::list<shared_ptr<PCTaskDescriptorList>> newPCList, shared_ptr<TaskList> taskList, int pcCount);
 	~BalancerAlgorithmOrganism();
 	virtual double MeasureFitness();
-	BalancerAlgorithmOrganism* CreateOrganism();
-	BalancerAlgorithmOrganism* Mutate();
-	static std::pair<BalancerAlgorithmOrganism*, BalancerAlgorithmOrganism*> ProduceChildren(BalancerAlgorithmOrganism * parent1, BalancerAlgorithmOrganism * parent2, TaskList* tasks, int pcNumber);
+	void Initialize();
+	shared_ptr<BalancerAlgorithmOrganism> Mutate();
+	static std::pair<shared_ptr<BalancerAlgorithmOrganism>, shared_ptr<BalancerAlgorithmOrganism>> ProduceChildren(shared_ptr<BalancerAlgorithmOrganism> parent1, shared_ptr<BalancerAlgorithmOrganism> parent2, shared_ptr<TaskList> tasks, int pcNumber);
 private:
-	std::list<PCTaskDescriptorList*> pcList;
-	TaskList* tasks;
+	std::list<shared_ptr<PCTaskDescriptorList>> pcList;
+	shared_ptr<TaskList> tasks;
 	int pcCount;		
-	std::list<PCTaskDescriptorList*> ClonePCList();
+	std::list<shared_ptr<PCTaskDescriptorList>> ClonePCList();
 
 };
 

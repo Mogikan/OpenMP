@@ -29,12 +29,17 @@ void Task::SetExecutionTime(double executionTime)
 	this->executionTime = executionTime;
 }
 
-std::vector<Task*> Task::GetPrecedingTasks()
+void Task::SetTaskNumber(int taskNumber)
+{
+	this->taskNumber = taskNumber;
+}
+
+std::vector<shared_ptr<Task>> Task::GetPrecedingTasks()
 {
 	return precedingTasks;
 }
 
-void Task::AddPrecedingTask(Task * task)
+void Task::AddPrecedingTask(shared_ptr<Task> task)
 {
 	precedingTasks.push_back(task);
 }

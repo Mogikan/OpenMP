@@ -2,9 +2,8 @@
 
 
 
-LoadBalancingAlgorithm::LoadBalancingAlgorithm(GeneticAlgorithmParameters* geneticParameters,TaskList* tasklist):GeneticAlgorithm(geneticParameters)
+LoadBalancingAlgorithm::LoadBalancingAlgorithm(shared_ptr<GeneticAlgorithmParameters> geneticParameters,shared_ptr<TaskList> tasklist):GeneticAlgorithm(geneticParameters)
 {
-	this->geneticParameters = geneticParameters;
 	this->tasks = tasklist;	
 }
 
@@ -13,22 +12,24 @@ LoadBalancingAlgorithm::~LoadBalancingAlgorithm()
 {
 }
 
-BalancerAlgorithmOrganism * LoadBalancingAlgorithm::CreateOrganism()
+shared_ptr<BalancerAlgorithmOrganism> LoadBalancingAlgorithm::CreateOrganism()
 {
-	return new BalancerAlgorithmOrganism(this->tasks,this->PCCount);
+	auto result = shared_ptr<BalancerAlgorithmOrganism>(new BalancerAlgorithmOrganism(this->tasks, this->PCCount));
+	result->Initialize();
+	return result;
 }
 
-std::pair<BalancerAlgorithmOrganism*, BalancerAlgorithmOrganism*> LoadBalancingAlgorithm::ProduceChildren(BalancerAlgorithmOrganism * parent1, BalancerAlgorithmOrganism * parent2)
+std::pair<shared_ptr<BalancerAlgorithmOrganism>, shared_ptr<BalancerAlgorithmOrganism>> LoadBalancingAlgorithm::ProduceChildren(shared_ptr<BalancerAlgorithmOrganism> parent1, shared_ptr<BalancerAlgorithmOrganism> parent2)
 {
-	return std::pair<BalancerAlgorithmOrganism*, BalancerAlgorithmOrganism*>();
+	return BalancerAlgorithmOrganism::ProduceChildren(parent1, parent2, this->tasks, this->PCCount);
 }
 
-BalancerAlgorithmOrganism * LoadBalancingAlgorithm::ProduceMutant(BalancerAlgorithmOrganism * organism)
+shared_ptr<BalancerAlgorithmOrganism> LoadBalancingAlgorithm::ProduceMutant(shared_ptr<BalancerAlgorithmOrganism> organism)
 {
 	return organism->Mutate();
 }
 
-double LoadBalancingAlgorithm::MeasureFitness(BalancerAlgorithmOrganism * organism)
+double LoadBalancingAlgorithm::MeasureFitness(shared_ptr<BalancerAlgorithmOrganism> organism)
 {
 	return organism->MeasureFitness();
 }

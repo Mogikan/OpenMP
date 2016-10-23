@@ -13,18 +13,18 @@ PCTaskDescriptorList::~PCTaskDescriptorList()
 {
 }
 
-PCTaskDescriptorList * PCTaskDescriptorList::Clone()
+shared_ptr<PCTaskDescriptorList>  PCTaskDescriptorList::Clone()
 {
-	auto result = new PCTaskDescriptorList();
+	auto result = shared_ptr<PCTaskDescriptorList>(new PCTaskDescriptorList());
 	for (int i = 0; i < taskDescriptorList.size(); i++)
 	{
-		result->AddTask(taskDescriptorList.at(i)->GetTask());
+		result->AddTask(taskDescriptorList[i]->GetTask());
 	}
 	return result;
 }
 
 
-TaskDescriptor * PCTaskDescriptorList::GetCurrentTask()
+shared_ptr<TaskDescriptor> PCTaskDescriptorList::GetCurrentTask()
 {
 	return taskDescriptorList.at(currentIndex);
 }
@@ -46,7 +46,7 @@ double PCTaskDescriptorList::GetConsumedTime()
 	return consumedTime;
 }
 
-void PCTaskDescriptorList::AddTask(Task * task)
+void PCTaskDescriptorList::AddTask(shared_ptr<Task> task)
 {
-	taskDescriptorList.push_back(new TaskDescriptor(task));
+	taskDescriptorList.push_back(shared_ptr<TaskDescriptor>(new TaskDescriptor(task)));
 }

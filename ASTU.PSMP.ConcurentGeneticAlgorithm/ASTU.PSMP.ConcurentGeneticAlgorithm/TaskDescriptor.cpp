@@ -1,6 +1,6 @@
 #include "TaskDescriptor.h"
 
-TaskDescriptor::TaskDescriptor(Task * task)
+TaskDescriptor::TaskDescriptor(shared_ptr<Task> task)
 {
 	this->task = task;
 }
@@ -20,7 +20,7 @@ void TaskDescriptor::SetStartTime(double startTime)
 	completed = true;
 }
 
-Task * TaskDescriptor::GetTask()
+shared_ptr<Task> TaskDescriptor::GetTask()
 {
 	return task;
 }

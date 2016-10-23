@@ -1,5 +1,8 @@
+#pragma once;
 #include <vector>
-#pragma once
+#include <memory>
+using namespace std;
+
 class Task
 {
 public:
@@ -9,11 +12,12 @@ public:
 	int GetTaskNumber();
 	double GetExecutionTime();
 	void SetExecutionTime(double executionTime);
-	std::vector < Task* > GetPrecedingTasks();
-	void AddPrecedingTask(Task* task);
+	void SetTaskNumber(int taskNumber);
+	std::vector <shared_ptr<Task>> GetPrecedingTasks();
+	void AddPrecedingTask(shared_ptr<Task> task);
 private:
 	double taskNumber;
-	std::vector<Task*> precedingTasks;
+	std::vector<shared_ptr<Task>> precedingTasks;
 	double executionTime;
 };
 

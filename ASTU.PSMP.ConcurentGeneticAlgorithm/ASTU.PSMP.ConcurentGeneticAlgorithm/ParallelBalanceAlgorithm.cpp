@@ -1,27 +1,37 @@
 #include "ParallelBalanceAlgorithm.h"
 
-ParallelBalanceAlgorithm::ParallelBalanceAlgorithm(GeneticAlgorithmParameters * geneticParameters, TaskList * tasklist,int islandsCount,int migrationCount)
+ParallelBalanceAlgorithm::ParallelBalanceAlgorithm(shared_ptr<GeneticAlgorithmParameters> geneticParameters, shared_ptr<TaskList> tasklist,int islandsCount,int migrationCount)
 {
 	this->geneticParameters = geneticParameters;
 	this->tasklist = tasklist;
+	this->islandsCount = islandsCount;
+	this->migrationCount = migrationCount;
+}
+
+ParallelBalanceAlgorithm::~ParallelBalanceAlgorithm()
+{
+}
+
+void ParallelBalanceAlgorithm::Execute()
+{
 	int islandPopulation = geneticParameters->GetInitialPopulationSize() / islandsCount;
 	int islandReproductionNumber = geneticParameters->GetReproductionNumber() / islandsCount;
-	int islandGenerationCount = geneticParameters->GetGenerationCount()/migrationCount;
-	auto islandGeneticParameters = new GeneticAlgorithmParameters(*geneticParameters);
+	int islandGenerationCount = geneticParameters->GetGenerationCount() / migrationCount;
+	shared_ptr<GeneticAlgorithmParameters> islandGeneticParameters(new GeneticAlgorithmParameters(*geneticParameters.get()));
 	islandGeneticParameters->SetInitialPopulationSize(islandPopulation);
 	islandGeneticParameters->SetReproductionNumber(islandReproductionNumber);
 	islandGeneticParameters->SetGenerationCount(islandGenerationCount);
 	for (int i = 0; i < islandPopulation; i++)
 	{
-		auto loadBalancingAlgorithm = new LoadBalancingAlgorithm(islandGeneticParameters,tasklist);
+		shared_ptr<LoadBalancingAlgorithm> loadBalancingAlgorithm(new LoadBalancingAlgorithm(islandGeneticParameters, tasklist));
 		this->islands.push_back(loadBalancingAlgorithm);
 	}
 	//TODO: Move to separate method
 	for (int i = 0; i < migrationCount; i++)
 	{
-		BalancerAlgorithmOrganism* bestOrganism = nullptr;
-		int bestIndex=0;
-		for (auto iterator=islands.begin();iterator!=islands.end();iterator++)
+		shared_ptr<BalancerAlgorithmOrganism> bestOrganism;
+		int bestIndex = 0;
+		for (auto iterator = islands.begin(); iterator != islands.end(); iterator++)
 		{
 			(*iterator)->Execute();
 			auto islandBestOrganism = (*iterator)->SelectBest();
@@ -30,7 +40,7 @@ ParallelBalanceAlgorithm::ParallelBalanceAlgorithm(GeneticAlgorithmParameters * 
 				bestIndex = iterator - islands.begin();
 				bestOrganism = islandBestOrganism;
 			}
-			else 
+			else
 			{
 				bestIndex = iterator - islands.begin();
 				bestOrganism = islandBestOrganism;
@@ -43,10 +53,6 @@ ParallelBalanceAlgorithm::ParallelBalanceAlgorithm(GeneticAlgorithmParameters * 
 			{
 				(*iterator)->ReplaceWorst(bestOrganism);
 			}
-		}		
+		}
 	}
-}
-
-ParallelBalanceAlgorithm::~ParallelBalanceAlgorithm()
-{
 }

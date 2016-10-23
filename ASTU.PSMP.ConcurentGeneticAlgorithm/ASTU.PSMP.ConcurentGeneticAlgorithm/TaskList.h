@@ -3,19 +3,20 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <memory>
 #include "Task.h"
 using namespace std;
 class TaskList
 {
 public:
 	TaskList();
-	TaskList(std::vector<Task*> tasks);
+	TaskList(std::vector<shared_ptr<Task>> tasks);
 	~TaskList();
-	std::vector < Task*> GetAllTasks();
+	std::vector <shared_ptr<Task>> GetAllTasks();
 	int Size();
-	Task* GetTaskByNumber(int taskNumber);
-	static TaskList* FromFile(std::string filePath);
+	shared_ptr<Task> GetTaskByNumber(int taskNumber);
+	static shared_ptr<TaskList> FromFile(std::string filePath);
 private:
-	std::vector <Task*> taskList;
+	std::vector <shared_ptr<Task>> taskList;
 };
 

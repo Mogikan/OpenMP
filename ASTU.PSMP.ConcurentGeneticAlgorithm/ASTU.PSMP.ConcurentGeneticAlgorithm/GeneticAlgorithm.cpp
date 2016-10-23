@@ -3,7 +3,7 @@
 using namespace std;
 
 
-GeneticAlgorithm::GeneticAlgorithm(GeneticAlgorithmParameters * geneticParameters)
+GeneticAlgorithm::GeneticAlgorithm(shared_ptr<GeneticAlgorithmParameters> geneticParameters)
 {
 	this->geneticParameters = geneticParameters;
 }
@@ -12,18 +12,19 @@ GeneticAlgorithm::~GeneticAlgorithm()
 {
 }
 
-BalancerAlgorithmOrganism * GeneticAlgorithm::SelectBest()
+shared_ptr<BalancerAlgorithmOrganism> GeneticAlgorithm::SelectBest()
 {	
-	return *std::max_element(population.begin(), population.end(), [](BalancerAlgorithmOrganism* a, BalancerAlgorithmOrganism* b)->double { return a->MeasureFitness()<b->MeasureFitness(); });
+	shared_ptr<BalancerAlgorithmOrganism> result (*std::max_element(population.begin(), population.end(), [](shared_ptr<BalancerAlgorithmOrganism> a, shared_ptr<BalancerAlgorithmOrganism> b)->double { return a->MeasureFitness() < b->MeasureFitness(); }));
+	return result;
 }
 
 int GeneticAlgorithm::GetWorstIndex()
 {
-	return std::min_element(population.begin(), population.end(), [](BalancerAlgorithmOrganism* a, BalancerAlgorithmOrganism* b)->double { return a->MeasureFitness() < b->MeasureFitness(); }) - population.begin();
+	return std::min_element(population.begin(), population.end(), [](shared_ptr<BalancerAlgorithmOrganism> a, shared_ptr<BalancerAlgorithmOrganism> b)->double { return a->MeasureFitness() < b->MeasureFitness(); }) - population.begin();
 }
 
 
-void GeneticAlgorithm::ReplaceWorst(BalancerAlgorithmOrganism * organism)
+void GeneticAlgorithm::ReplaceWorst(shared_ptr<BalancerAlgorithmOrganism> organism)
 {
 	population[GetWorstIndex()] = organism;
 
@@ -64,10 +65,10 @@ void GeneticAlgorithm::ProduceChildren()
 	{
 
 		int parent1Index = rand() % notUsedOrganisms.size();
-		BalancerAlgorithmOrganism* parent1Organism = population.at(notUsedOrganisms.at(parent1Index));
+		auto parent1Organism = population[notUsedOrganisms.at(parent1Index)];
 		notUsedOrganisms.erase(notUsedOrganisms.begin() + parent1Index);
 		int parent2Index = rand() % notUsedOrganisms.size();
-		BalancerAlgorithmOrganism* parent2Organism = population.at(notUsedOrganisms.at(parent2Index));
+		auto parent2Organism = population[notUsedOrganisms.at(parent2Index)];
 		notUsedOrganisms.erase(notUsedOrganisms.begin() + parent2Index);
 		auto children = ProduceChildren(parent1Organism, parent2Organism);
 		population.push_back(children.first);
@@ -83,7 +84,7 @@ void GeneticAlgorithm::Mutate()
 		{
 			auto originalOrganism = population.at(i);
 			auto mutantOrganism = ProduceMutant(originalOrganism);
-			BalancerAlgorithmOrganism* leftOrganism;
+			shared_ptr<BalancerAlgorithmOrganism> leftOrganism;
 			if (rand() / RAND_MAX < geneticParameters->GetGoodOrganizmSurvivalProbability())
 			{
 				leftOrganism = MeasureFitness(mutantOrganism) > MeasureFitness(originalOrganism) ? mutantOrganism : originalOrganism;
