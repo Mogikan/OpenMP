@@ -80,12 +80,12 @@ void GeneticAlgorithm::Mutate()
 {
 	for (int i = 0; i < population.size(); i++)
 	{
-		if (1.*rand() / RAND_MAX < geneticParameters->GetMutationProbability()) 
+		if (((double)rand()) / RAND_MAX < geneticParameters->GetMutationProbability()) 
 		{
-			auto originalOrganism = population.at(i);
+			auto originalOrganism = population[i];
 			auto mutantOrganism = ProduceMutant(originalOrganism);
 			shared_ptr<BalancerAlgorithmOrganism> leftOrganism;
-			if (1.*rand() / RAND_MAX < geneticParameters->GetGoodOrganizmSurvivalProbability())
+			if (((double)rand()) / RAND_MAX < geneticParameters->GetGoodOrganizmSurvivalProbability())
 			{
 				leftOrganism = MeasureFitness(mutantOrganism) > MeasureFitness(originalOrganism) ? mutantOrganism : originalOrganism;
 			}
@@ -121,7 +121,7 @@ void GeneticAlgorithm::NaturalSelect()
 		int fighterIndex2 = notFightedYet.at(randomFighterIndex2);
 		notFightedYet.erase(notFightedYet.begin() + randomFighterIndex2);
 		int deathIndex;
-		if (1.*rand() / RAND_MAX < geneticParameters->GetBadOrganizmDeathProbability()) 		
+		if (((double)rand()) / RAND_MAX < geneticParameters->GetBadOrganizmDeathProbability()) 		
 		{
 			deathIndex = (MeasureFitness(population.at(fighterIndex1)) < MeasureFitness(population.at(fighterIndex2))) ? fighterIndex1 : fighterIndex2;
 		}

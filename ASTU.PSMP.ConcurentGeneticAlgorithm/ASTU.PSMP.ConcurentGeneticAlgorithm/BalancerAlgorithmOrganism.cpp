@@ -120,18 +120,13 @@ shared_ptr<BalancerAlgorithmOrganism> BalancerAlgorithmOrganism::Mutate()
 	}
 	int pairsCount = leftMutationTasks.size()/2;
 	for (int i = 0; i < pairsCount; i++)
-	{
-		//TODO: get from genetic parameters
-		if (((double)rand()) / RAND_MAX < 0.95)
-		{
-			continue;
-		}
-		int taskIndex1 = leftMutationTasks.at(rand() % leftMutationTasks.size());
-		int task1 = leftMutationTasks.at(taskIndex1);
+	{		
+		int taskIndex1 = rand() % leftMutationTasks.size();
+		int task1 = leftMutationTasks[taskIndex1];
 		leftMutationTasks.erase(leftMutationTasks.begin() + taskIndex1);
 
-		int taskIndex2 = leftMutationTasks.at(rand() % leftMutationTasks.size());
-		int task2 = leftMutationTasks.at(taskIndex2);
+		int taskIndex2 = rand() % leftMutationTasks.size();
+		int task2 = leftMutationTasks[taskIndex2];
 		leftMutationTasks.erase(leftMutationTasks.begin() + taskIndex2);
 
 		auto pc1 = GetTaskPC(task1, newPCList);
@@ -141,12 +136,12 @@ shared_ptr<BalancerAlgorithmOrganism> BalancerAlgorithmOrganism::Mutate()
 		auto taskDescriptor1 = pc1->GetTaskAtIndex(firstIndex);
 		auto taskDescriptor2 = pc2->GetTaskAtIndex(secondIndex);
 		pc1->ReplaceTaskDescriptor(firstIndex, taskDescriptor2);
-		pc2->ReplaceTaskDescriptor(firstIndex, taskDescriptor1);
+		pc2->ReplaceTaskDescriptor(secondIndex, taskDescriptor1);
 	}
 	return shared_ptr<BalancerAlgorithmOrganism>(new BalancerAlgorithmOrganism(newPCList, tasks, pcCount));
 }
 
-void MarkUsedTasks(std::list<shared_ptr<PCTaskDescriptorList>> taskList, std::vector<bool> usedTasks)
+void MarkUsedTasks(std::list<shared_ptr<PCTaskDescriptorList>> taskList, std::vector<bool> & usedTasks)
 {
 	for (auto iterator = taskList.begin(); iterator != taskList.end(); iterator++)
 	{
@@ -158,7 +153,7 @@ void MarkUsedTasks(std::list<shared_ptr<PCTaskDescriptorList>> taskList, std::ve
 }
 
 
-void RemoveUsedTasks(std::list<shared_ptr<PCTaskDescriptorList>> taskList, std::vector<bool> usedTasks)
+void RemoveUsedTasks(std::list<shared_ptr<PCTaskDescriptorList>> taskList, std::vector<bool> & usedTasks)
 {
 	for (auto iterator = taskList.begin(); iterator != taskList.end(); iterator++)
 	{
@@ -167,22 +162,23 @@ void RemoveUsedTasks(std::list<shared_ptr<PCTaskDescriptorList>> taskList, std::
 			if (usedTasks[(*iterator)->GetTaskAtIndex(i)->GetTask()->GetTaskNumber()])
 			{
 				(*iterator)->RemoveTaskDescriptorAtIndex(i);
+				i--;
 			}
 		}
 	}
 }
 
-void AddLeftTasks(std::list<shared_ptr<PCTaskDescriptorList>> taskList, std::vector<bool> usedTasks, shared_ptr<TaskList> tasks, int listSize)
+void AddLeftTasks(std::list<shared_ptr<PCTaskDescriptorList>> taskList, std::vector<bool> & usedTasks, shared_ptr<TaskList> & tasks, int listSize)
 {
 	std::vector<shared_ptr<Task>> allTasks = tasks->GetAllTasks();
 	for (int i = 0; i < allTasks.size(); i++)
 	{
 		if (!usedTasks[i])
 		{
+			usedTasks[i] = true;
 			auto task = allTasks[i];
 			int destinationIndex = rand() % listSize;
-			auto destinationNode = taskList.begin();
-			std::next(destinationNode, destinationIndex);
+			auto destinationNode = std::next(taskList.begin(), destinationIndex);
 			(*destinationNode)->AddTask(task);
 		}
 	}
@@ -196,8 +192,9 @@ std::pair<shared_ptr<BalancerAlgorithmOrganism>, shared_ptr<BalancerAlgorithmOrg
 	auto genesSlicePosition = std::next(parent1PCList.begin(), slicePosition);	
 	std::list<shared_ptr<PCTaskDescriptorList>> child1PartOne(parent1PCList.begin(), genesSlicePosition);
 	std::list<shared_ptr<PCTaskDescriptorList>> child1PartTwo(genesSlicePosition,parent1PCList.end());
-	std::list<shared_ptr<PCTaskDescriptorList>> child2PartOne(parent2PCList.begin(), genesSlicePosition);
-	std::list<shared_ptr<PCTaskDescriptorList>> child2PartTwo(genesSlicePosition, parent2PCList.end());
+	auto genesSlicePosition2 = std::next(parent2PCList.begin(), slicePosition);
+	std::list<shared_ptr<PCTaskDescriptorList>> child2PartOne(parent2PCList.begin(), genesSlicePosition2);
+	std::list<shared_ptr<PCTaskDescriptorList>> child2PartTwo(genesSlicePosition2, parent2PCList.end());
 	std::vector<bool> usedTasksChild1;
 	for (int i = 0; i < tasks->Size(); i++)
 	{

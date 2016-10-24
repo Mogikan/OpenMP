@@ -17,8 +17,8 @@ int main()
 	geneticParameters->SetBadOrganizmDeathProbability(0.95);
 
 	std::shared_ptr<TaskList> taskList(TaskList::FromFile("graphdata.txt"));
-	int islandsCount = 5;
-	int migrationCount = 10;
+	int islandsCount = 1;
+	int migrationCount = 1;
 	std::unique_ptr<ParallelBalanceAlgorithm> algorithm(new ParallelBalanceAlgorithm(geneticParameters, taskList, islandsCount, migrationCount));
 	algorithm->Execute();
 	cin.get();
