@@ -35,6 +35,54 @@ void BalancerAlgorithmOrganism::Initialize()
 	}
 }
 
+void WriteToDebugOutput(string s)
+{                             
+   std::ostringstream os_;    
+   os_ << s;                   
+   OutputDebugString( os_.str().c_str() );
+}
+
+string ToString(double value)
+{
+	std::ostringstream strs;
+	strs << value;
+	std::string str = strs.str();
+	return str;
+}
+
+//shared_ptr<TaskDescriptor> FindDescriptor(std::list <shared_ptr<PCTaskDescriptorList>> pcList,int taskNumber)
+//{
+//	for (auto iterator = pcList.begin(); iterator != pcList.end(); iterator++)
+//	{
+//		auto pc = (*iterator);
+//		if (pc->ContainsTask(taskNumber))
+//		{
+//			return pc->GetTaskDescriptorByTaskNumber(taskNumber);
+//		}
+//	}
+//	throw new exception();
+//}
+
+bool FindDeadLock(shared_ptr<Task> task, std::list <shared_ptr<PCTaskDescriptorList>> pcList,std::unordered_map<int, shared_ptr<TaskDescriptor>> countedTasks, shared_ptr<PCTaskDescriptorList> currentPC)
+{
+	auto precedingTasks = task->GetPrecedingTasks();
+	for (int i = 0; i < precedingTasks.size(); i++)
+	{
+		auto precedingTaskNumber = precedingTasks[i]->GetTaskNumber();
+		if (currentPC->ContainsTask(precedingTaskNumber) && countedTasks.find(precedingTaskNumber) == countedTasks.end())
+		{
+			return true;
+		}
+		//auto precedingDescriptor = FindDescriptor(pcList,precedingTaskNumber);
+		
+		if (FindDeadLock(precedingTasks[i], pcList, countedTasks, currentPC))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 double BalancerAlgorithmOrganism::MeasureFitness()
 {
 	std::list <shared_ptr<PCTaskDescriptorList>> ::iterator iterator,iteratorCopy;
@@ -42,6 +90,16 @@ double BalancerAlgorithmOrganism::MeasureFitness()
 	bool breakIteration = false;
 	double maxExecutionTime = -DBL_MAX;
 	double penalty = 0;
+	for (iterator = pcList.begin(); iterator != pcList.end(); iterator++)
+	{	
+		auto pc = (*iterator);
+		for (int i = 0; i < pc->Size(); i++)
+		{
+			WriteToDebugOutput(" ");
+			WriteToDebugOutput(ToString(pc->GetTaskAtIndex(i)->GetTask()->GetTaskNumber()));
+		}
+		WriteToDebugOutput("\n\r");
+	}
 	for (iterator = pcList.begin(); iterator != pcList.end(); (breakIteration)?iterator:iterator++)
 	{
 		auto pc = (*iterator);
@@ -49,6 +107,14 @@ double BalancerAlgorithmOrganism::MeasureFitness()
 		while (pc->HasNotConsumedTask())
 		{
 			auto taskDescriptor = pc->GetCurrentTask();
+			if (FindDeadLock(taskDescriptor->GetTask(),pcList,countedTasks,pc))
+			{
+				return INT32_MAX;// 000;
+				//penalty += 1000;
+				//iterator++;
+				//breakIteration = true;
+				//break;
+			}
 			auto precedingTasks = taskDescriptor->GetTask()->GetPrecedingTasks();
 			double startTime = pc->GetConsumedTime();
 			for (int i = 0; i < precedingTasks.size(); i++)
@@ -58,14 +124,9 @@ double BalancerAlgorithmOrganism::MeasureFitness()
 				auto foundDescriptorIterator = countedTasks.find(precedingTaskNumber);
 				if (foundDescriptorIterator == countedTasks.end())
 				{
-					if (pc->ContainsTask(precedingTaskNumber)) 
-					{
-						penalty = 1000;
-						iterator++;
-						breakIteration = true;
-						break;
-					}
+					
 					iteratorCopy = iterator;
+					bool needIncrement = false;
 					if (iterator == pcList.begin()) 
 					{
 						iteratorCopy++;
@@ -73,16 +134,20 @@ double BalancerAlgorithmOrganism::MeasureFitness()
 					else
 					{
 						iteratorCopy--;
+						needIncrement = true;
 					}
 					pcList.splice(pcList.end(), pcList, iterator);
 					iterator = iteratorCopy;
-					iteratorCopy++;
+					if (needIncrement)
+					{
+						iterator++;
+					}
 					breakIteration = true;
 					break;
 				}
 				else 
 				{
-					startTime = std::max(startTime,foundDescriptorIterator->second->GetFinishTime());
+					startTime = max(startTime,foundDescriptorIterator->second->GetFinishTime());
 				}
 			}
 			if (breakIteration)
@@ -95,7 +160,7 @@ double BalancerAlgorithmOrganism::MeasureFitness()
 
 		maxExecutionTime = max(pc->GetConsumedTime(), maxExecutionTime);
 	}
-	return maxExecutionTime;
+	return maxExecutionTime + penalty;
 }
 
 shared_ptr<PCTaskDescriptorList> GetTaskPC(int taskNumber, std::list<shared_ptr<PCTaskDescriptorList>> newPCList)

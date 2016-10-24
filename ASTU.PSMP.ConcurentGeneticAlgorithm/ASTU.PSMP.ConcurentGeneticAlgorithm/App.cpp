@@ -21,6 +21,7 @@ int main()
 	int migrationCount = 1;
 	std::unique_ptr<ParallelBalanceAlgorithm> algorithm(new ParallelBalanceAlgorithm(geneticParameters, taskList, islandsCount, migrationCount));
 	algorithm->Execute();
+	cout << "done";
 	cin.get();
 	return 0;
 }

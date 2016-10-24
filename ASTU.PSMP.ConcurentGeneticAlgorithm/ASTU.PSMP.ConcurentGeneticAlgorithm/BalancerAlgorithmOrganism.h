@@ -6,6 +6,7 @@
 #include "TaskList.h"
 #include "PCTaskDescriptorList.h"
 #include <memory>
+#include <Windows.h>
 using namespace std;
 class BalancerAlgorithmOrganism
 	
