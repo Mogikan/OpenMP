@@ -188,7 +188,7 @@ shared_ptr<BalancerAlgorithmOrganism> BalancerAlgorithmOrganism::Mutate()
 		int task2 = leftMutationTasks[taskIndex2];
 		leftMutationTasks.erase(leftMutationTasks.begin() + taskIndex2);
 
-		if (((double)rand()) / INT_MAX > GeneticAlgorithmParameters::PairPermutationProbability)
+		if (((double)rand()) / RAND_MAX > GeneticAlgorithmParameters::PairPermutationProbability)
 		{
 			continue;
 		}

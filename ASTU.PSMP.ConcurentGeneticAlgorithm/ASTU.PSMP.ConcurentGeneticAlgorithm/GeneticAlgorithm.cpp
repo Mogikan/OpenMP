@@ -1,5 +1,6 @@
 #include "GeneticAlgorithm.h"
 #include <set>
+#include <iostream>
 using namespace std;
 
 
@@ -40,7 +41,7 @@ void GeneticAlgorithm::WriteToDebugOutput(string s)
 string GeneticAlgorithm::ToString(double value)
 {
 	std::ostringstream strs;
-	strs << value;
+	strs << value << "\n\r";
 	std::string str = strs.str();
 	return str;
 }
@@ -52,7 +53,9 @@ void GeneticAlgorithm::Execute()
 	{
 		ExecuteStep();
 		auto best = SelectBest();
-		WriteToDebugOutput(ToString(best->MeasureFitness()));
+		//WriteToDebugOutput(ToString(
+		cout<<best->MeasureFitness()<<"\n\r";
+		//));
 		WriteToDebugOutput("\n\r");
 	}
 }
@@ -110,6 +113,11 @@ void GeneticAlgorithm::Mutate()
 			{
 				leftOrganism = MeasureFitness(mutantOrganism) < MeasureFitness(originalOrganism) ? originalOrganism : mutantOrganism;
 			}
+			//WriteToDebugOutput(ToString(mutantOrganism->MeasureFitness()));
+			//WriteToDebugOutput(ToString(originalOrganism->MeasureFitness()));
+			//WriteToDebugOutput("left");
+			//WriteToDebugOutput(ToString(leftOrganism->MeasureFitness()));
+			population[i] = leftOrganism;
 		}
 	}
 }
@@ -140,12 +148,17 @@ void GeneticAlgorithm::NaturalSelect()
 		int deathIndex;
 		if (((double)rand()) / RAND_MAX < geneticParameters->GetBadOrganizmDeathProbability()) 		
 		{
-			deathIndex = (MeasureFitness(population[fighterIndex1]) < MeasureFitness(population[fighterIndex2])) ? fighterIndex1 : fighterIndex2;
+			deathIndex = (MeasureFitness(population[fighterIndex1]) > MeasureFitness(population[fighterIndex2])) ? fighterIndex1 : fighterIndex2;
 		}
 		else 
 		{
-			deathIndex = (MeasureFitness(population[fighterIndex1]) < MeasureFitness(population[fighterIndex2])) ? fighterIndex2 : fighterIndex1;
+			deathIndex = (MeasureFitness(population[fighterIndex1]) > MeasureFitness(population[fighterIndex2])) ? fighterIndex2 : fighterIndex1;
 		}
+
+		//WriteToDebugOutput(ToString(population[fighterIndex1]->MeasureFitness()));		
+		//WriteToDebugOutput(ToString(population[fighterIndex2]->MeasureFitness()));
+		//WriteToDebugOutput("Death");
+		//WriteToDebugOutput(ToString(population[deathIndex]->MeasureFitness()));
 		diedOrganisms.insert(deathIndex);
 	}
 	while (!diedOrganisms.empty()) {
