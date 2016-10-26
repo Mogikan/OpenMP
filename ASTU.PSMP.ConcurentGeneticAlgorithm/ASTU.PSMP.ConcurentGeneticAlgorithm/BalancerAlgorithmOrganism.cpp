@@ -50,8 +50,7 @@ string ToString(double value)
 	return str;
 }
 
-
-bool FindDeadLock(shared_ptr<Task> task, std::list <shared_ptr<PCTaskDescriptorList>> pcList,std::unordered_map<int, shared_ptr<TaskDescriptor>> countedTasks, shared_ptr<PCTaskDescriptorList> currentPC)
+bool FindTrivialDeadLock(shared_ptr<Task> task, std::list <shared_ptr<PCTaskDescriptorList>> pcList,std::unordered_map<int, shared_ptr<TaskDescriptor>> countedTasks, shared_ptr<PCTaskDescriptorList> currentPC)
 {
 	auto precedingTasks = task->GetPrecedingTasks();
 	for (int i = 0; i < precedingTasks.size(); i++)
@@ -60,10 +59,9 @@ bool FindDeadLock(shared_ptr<Task> task, std::list <shared_ptr<PCTaskDescriptorL
 		if (currentPC->ContainsTask(precedingTaskNumber) && countedTasks.find(precedingTaskNumber) == countedTasks.end())
 		{
 			return true;
-		}
-		//auto precedingDescriptor = FindDescriptor(pcList,precedingTaskNumber);
+		}		
 		
-		if (FindDeadLock(precedingTasks[i], pcList, countedTasks, currentPC))
+		if (FindTrivialDeadLock(precedingTasks[i], pcList, countedTasks, currentPC))
 		{
 			return true;
 		}
@@ -88,6 +86,8 @@ double BalancerAlgorithmOrganism::MeasureFitness()
 		}
 		WriteToDebugOutput("\n\r");
 	}
+
+	int deadlockCounter = 0;
 	for (iterator = pcList.begin(); iterator != pcList.end(); (breakIteration)?iterator:iterator++)
 	{
 		auto pc = (*iterator);
@@ -95,13 +95,15 @@ double BalancerAlgorithmOrganism::MeasureFitness()
 		while (pc->HasNotConsumedTask())
 		{
 			auto taskDescriptor = pc->GetCurrentTask();
-			if (FindDeadLock(taskDescriptor->GetTask(),pcList,countedTasks,pc))
+			if (deadlockCounter == pcCount)
 			{
-				return INT32_MAX;// 000;
-				//penalty += 1000;
-				//iterator++;
-				//breakIteration = true;
-				//break;
+				WriteToDebugOutput("Deadlock counter fired\n\r");
+				return DBL_MAX;				
+			}
+			if (FindTrivialDeadLock(taskDescriptor->GetTask(),pcList,countedTasks,pc))
+			{
+				WriteToDebugOutput("Trivial deadlock found\n\r");
+				return DBL_MAX;
 			}
 			auto precedingTasks = taskDescriptor->GetTask()->GetPrecedingTasks();
 			double startTime = pc->GetConsumedTime();
@@ -111,8 +113,7 @@ double BalancerAlgorithmOrganism::MeasureFitness()
 				int precedingTaskNumber = precedingTask->GetTaskNumber();
 				auto foundDescriptorIterator = countedTasks.find(precedingTaskNumber);
 				if (foundDescriptorIterator == countedTasks.end())
-				{
-					
+				{					
 					iteratorCopy = iterator;
 					bool needIncrement = false;
 					if (iterator == pcList.begin()) 
@@ -130,6 +131,7 @@ double BalancerAlgorithmOrganism::MeasureFitness()
 					{
 						iterator++;
 					}
+					deadlockCounter++;
 					breakIteration = true;
 					break;
 				}
@@ -142,12 +144,16 @@ double BalancerAlgorithmOrganism::MeasureFitness()
 			{
 				break;
 			}
+			deadlockCounter = 0;
 			countedTasks.insert({ taskDescriptor->GetTask()->GetTaskNumber(),taskDescriptor });
 			pc->ConsumeTask(startTime);
 		}
 
 		maxExecutionTime = max(pc->GetConsumedTime(), maxExecutionTime);
 	}
+	//WriteToDebugOutput("Good result\n\r");
+	//WriteToDebugOutput(ToString(maxExecutionTime + penalty));
+	//WriteToDebugOutput("\n\r");
 	return maxExecutionTime + penalty;
 }
 
