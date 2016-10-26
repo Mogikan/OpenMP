@@ -37,9 +37,9 @@ void BalancerAlgorithmOrganism::Initialize()
 
 void WriteToDebugOutput(string s)
 {                             
-   std::ostringstream os_;    
-   os_ << s;                   
-   OutputDebugString( os_.str().c_str() );
+   //std::ostringstream os_;    
+   //os_ << s;                   
+   //OutputDebugString( os_.str().c_str() );
 }
 
 string ToString(double value)
@@ -50,18 +50,6 @@ string ToString(double value)
 	return str;
 }
 
-//shared_ptr<TaskDescriptor> FindDescriptor(std::list <shared_ptr<PCTaskDescriptorList>> pcList,int taskNumber)
-//{
-//	for (auto iterator = pcList.begin(); iterator != pcList.end(); iterator++)
-//	{
-//		auto pc = (*iterator);
-//		if (pc->ContainsTask(taskNumber))
-//		{
-//			return pc->GetTaskDescriptorByTaskNumber(taskNumber);
-//		}
-//	}
-//	throw new exception();
-//}
 
 bool FindDeadLock(shared_ptr<Task> task, std::list <shared_ptr<PCTaskDescriptorList>> pcList,std::unordered_map<int, shared_ptr<TaskDescriptor>> countedTasks, shared_ptr<PCTaskDescriptorList> currentPC)
 {
@@ -193,6 +181,11 @@ shared_ptr<BalancerAlgorithmOrganism> BalancerAlgorithmOrganism::Mutate()
 		int taskIndex2 = rand() % leftMutationTasks.size();
 		int task2 = leftMutationTasks[taskIndex2];
 		leftMutationTasks.erase(leftMutationTasks.begin() + taskIndex2);
+
+		if (((double)rand()) / INT_MAX > GeneticAlgorithmParameters::PairPermutationProbability)
+		{
+			continue;
+		}
 
 		auto pc1 = GetTaskPC(task1, newPCList);
 		auto pc2 = GetTaskPC(task2, newPCList);

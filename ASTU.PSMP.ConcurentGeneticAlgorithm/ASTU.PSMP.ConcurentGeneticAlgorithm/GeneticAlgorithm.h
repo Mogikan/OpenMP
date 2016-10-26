@@ -14,6 +14,8 @@ public:
 	void ReplaceWorst(shared_ptr<BalancerAlgorithmOrganism> organism);
 	void Execute();
 private:
+	void WriteToDebugOutput(string s);
+	string ToString(double value);
 	std::vector<shared_ptr<BalancerAlgorithmOrganism>> population;
 	void InitPopulation();
 	void ExecuteStep();

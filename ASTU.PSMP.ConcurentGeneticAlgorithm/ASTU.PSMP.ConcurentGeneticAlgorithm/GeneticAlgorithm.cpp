@@ -14,13 +14,13 @@ GeneticAlgorithm::~GeneticAlgorithm()
 
 shared_ptr<BalancerAlgorithmOrganism> GeneticAlgorithm::SelectBest()
 {	
-	shared_ptr<BalancerAlgorithmOrganism> result (*std::max_element(population.begin(), population.end(), [](shared_ptr<BalancerAlgorithmOrganism> a, shared_ptr<BalancerAlgorithmOrganism> b)->double { return a->MeasureFitness() < b->MeasureFitness(); }));
+	shared_ptr<BalancerAlgorithmOrganism> result (*std::min_element(population.begin(), population.end(), [](shared_ptr<BalancerAlgorithmOrganism> a, shared_ptr<BalancerAlgorithmOrganism> b)->double { return a->MeasureFitness() < b->MeasureFitness(); }));
 	return result;
 }
 
 int GeneticAlgorithm::GetWorstIndex()
 {
-	return std::min_element(population.begin(), population.end(), [](shared_ptr<BalancerAlgorithmOrganism> a, shared_ptr<BalancerAlgorithmOrganism> b)->double { return a->MeasureFitness() < b->MeasureFitness(); }) - population.begin();
+	return std::max_element(population.begin(), population.end(), [](shared_ptr<BalancerAlgorithmOrganism> a, shared_ptr<BalancerAlgorithmOrganism> b)->double { return a->MeasureFitness() < b->MeasureFitness(); }) - population.begin();
 }
 
 
@@ -30,12 +30,30 @@ void GeneticAlgorithm::ReplaceWorst(shared_ptr<BalancerAlgorithmOrganism> organi
 
 }
 
+void GeneticAlgorithm::WriteToDebugOutput(string s)
+{
+	std::ostringstream os_;
+	os_ << s;
+	OutputDebugString(os_.str().c_str());
+}
+
+string GeneticAlgorithm::ToString(double value)
+{
+	std::ostringstream strs;
+	strs << value;
+	std::string str = strs.str();
+	return str;
+}
+
 void GeneticAlgorithm::Execute()
 {
 	InitPopulation();
 	for (int i = 0; i < geneticParameters->GetGenerationCount(); i++)
 	{
 		ExecuteStep();
+		auto best = SelectBest();
+		WriteToDebugOutput(ToString(best->MeasureFitness()));
+		WriteToDebugOutput("\n\r");
 	}
 }
 
@@ -63,7 +81,6 @@ void GeneticAlgorithm::ProduceChildren()
 	}
 	for (int j = 0; j < geneticParameters->GetReproductionNumber(); j++)
 	{
-
 		int parent1Index = rand() % notUsedOrganisms.size();
 		auto parent1Organism = population[notUsedOrganisms.at(parent1Index)];
 		notUsedOrganisms.erase(notUsedOrganisms.begin() + parent1Index);
@@ -87,11 +104,11 @@ void GeneticAlgorithm::Mutate()
 			shared_ptr<BalancerAlgorithmOrganism> leftOrganism;
 			if (((double)rand()) / RAND_MAX < geneticParameters->GetGoodOrganizmSurvivalProbability())
 			{
-				leftOrganism = MeasureFitness(mutantOrganism) > MeasureFitness(originalOrganism) ? mutantOrganism : originalOrganism;
+				leftOrganism = MeasureFitness(mutantOrganism) < MeasureFitness(originalOrganism) ? mutantOrganism : originalOrganism;
 			}
 			else 
 			{
-				leftOrganism = MeasureFitness(mutantOrganism) > MeasureFitness(originalOrganism) ? originalOrganism : mutantOrganism;
+				leftOrganism = MeasureFitness(mutantOrganism) < MeasureFitness(originalOrganism) ? originalOrganism : mutantOrganism;
 			}
 		}
 	}
@@ -123,11 +140,11 @@ void GeneticAlgorithm::NaturalSelect()
 		int deathIndex;
 		if (((double)rand()) / RAND_MAX < geneticParameters->GetBadOrganizmDeathProbability()) 		
 		{
-			deathIndex = (MeasureFitness(population.at(fighterIndex1)) < MeasureFitness(population.at(fighterIndex2))) ? fighterIndex1 : fighterIndex2;
+			deathIndex = (MeasureFitness(population[fighterIndex1]) < MeasureFitness(population[fighterIndex2])) ? fighterIndex1 : fighterIndex2;
 		}
 		else 
 		{
-			deathIndex = (MeasureFitness(population.at(fighterIndex1)) < MeasureFitness(population.at(fighterIndex2))) ? fighterIndex2 : fighterIndex1;
+			deathIndex = (MeasureFitness(population[fighterIndex1]) < MeasureFitness(population[fighterIndex2])) ? fighterIndex2 : fighterIndex1;
 		}
 		diedOrganisms.insert(deathIndex);
 	}

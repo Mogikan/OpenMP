@@ -7,6 +7,7 @@
 #include "PCTaskDescriptorList.h"
 #include <memory>
 #include <Windows.h>
+#include "GeneticAlgorithmParameters.h"
 using namespace std;
 class BalancerAlgorithmOrganism
 	

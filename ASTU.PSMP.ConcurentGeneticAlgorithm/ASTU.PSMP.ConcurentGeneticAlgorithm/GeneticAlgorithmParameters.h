@@ -20,7 +20,7 @@ public:
 	void SetGoodOrganizmSurvivalProbability(double goodOrganizmSurvivalProbability);
 	void SetBadOrganizmDeathProbability(double badOrganizmDeathProbability);
 	void SetOrganismStatesCount(int statesCount);
-
+	static double constexpr PairPermutationProbability = 0.2;
 private:
 	int initialPopulationSize = 10;
 	int generationCount = 100;

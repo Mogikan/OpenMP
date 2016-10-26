@@ -9,10 +9,10 @@ int main()
 	cout << "Hello world\n";
 	srand(time(NULL));
 	std::shared_ptr<GeneticAlgorithmParameters> geneticParameters(new GeneticAlgorithmParameters());
-	geneticParameters->SetInitialPopulationSize(10);
+	geneticParameters->SetInitialPopulationSize(50);
 	geneticParameters->SetGenerationCount(100);
-	geneticParameters->SetReproductionNumber(3);	
-	geneticParameters->SetMutationProbability(0.05);
+	geneticParameters->SetReproductionNumber(20);	
+	geneticParameters->SetMutationProbability(0.02);
 	geneticParameters->SetGoodOrganizmSurvivalProbability(0.99);
 	geneticParameters->SetBadOrganizmDeathProbability(0.95);
 
