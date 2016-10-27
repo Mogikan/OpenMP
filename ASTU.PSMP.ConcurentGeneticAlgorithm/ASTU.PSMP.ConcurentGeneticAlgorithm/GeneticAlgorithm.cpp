@@ -52,11 +52,11 @@ void GeneticAlgorithm::Execute()
 	for (int i = 0; i < geneticParameters->GetGenerationCount(); i++)
 	{
 		ExecuteStep();
-		auto best = SelectBest();
-		//WriteToDebugOutput(ToString(
-		cout<<best->MeasureFitness()<<"\n\r";
-		//));
-		WriteToDebugOutput("\n\r");
+		//auto best = SelectBest();
+		////WriteToDebugOutput(ToString(
+		//cout<<best->MeasureFitness()<<"\n\r";
+		////));
+		//WriteToDebugOutput("\n\r");
 	}
 }
 
@@ -85,10 +85,10 @@ void GeneticAlgorithm::ProduceChildren()
 	for (int j = 0; j < geneticParameters->GetReproductionNumber(); j++)
 	{
 		int parent1Index = rand() % notUsedOrganisms.size();
-		auto parent1Organism = population[notUsedOrganisms.at(parent1Index)];
+		auto parent1Organism = population[notUsedOrganisms[parent1Index]];
 		notUsedOrganisms.erase(notUsedOrganisms.begin() + parent1Index);
 		int parent2Index = rand() % notUsedOrganisms.size();
-		auto parent2Organism = population[notUsedOrganisms.at(parent2Index)];
+		auto parent2Organism = population[notUsedOrganisms[parent2Index]];
 		notUsedOrganisms.erase(notUsedOrganisms.begin() + parent2Index);
 		auto children = ProduceChildren(parent1Organism, parent2Organism);
 		population.push_back(children.first);

@@ -14,8 +14,7 @@ public:
 	virtual std::pair<shared_ptr<BalancerAlgorithmOrganism>, shared_ptr<BalancerAlgorithmOrganism>> ProduceChildren(shared_ptr<BalancerAlgorithmOrganism> parent1, shared_ptr<BalancerAlgorithmOrganism>  parent2) override;
 	virtual shared_ptr<BalancerAlgorithmOrganism> ProduceMutant(shared_ptr<BalancerAlgorithmOrganism> organism) override;
 	virtual double MeasureFitness(shared_ptr<BalancerAlgorithmOrganism> organism) override;
-private:
-	const int PCCount = 5;
+private:	
 	unique_ptr<GeneticAlgorithmParameters> geneticParameters;
 	shared_ptr<TaskList> tasks;
 };

@@ -1,4 +1,6 @@
 #include "ParallelBalanceAlgorithm.h"
+#include <omp.h>
+#include <iostream>
 
 ParallelBalanceAlgorithm::ParallelBalanceAlgorithm(shared_ptr<GeneticAlgorithmParameters> geneticParameters, shared_ptr<TaskList> tasklist,int islandsCount,int migrationCount)
 {
@@ -26,27 +28,34 @@ void ParallelBalanceAlgorithm::Execute()
 		shared_ptr<LoadBalancingAlgorithm> loadBalancingAlgorithm(new LoadBalancingAlgorithm(islandGeneticParameters, tasklist));
 		this->islands.push_back(loadBalancingAlgorithm);
 	}
-	//TODO: Move to separate method
 	for (int i = 0; i < migrationCount; i++)
 	{
 		shared_ptr<BalancerAlgorithmOrganism> bestOrganism;
 		int bestIndex = 0;
-		for (auto iterator = islands.begin(); iterator != islands.end(); iterator++)
+		#pragma omp parallel for num_threads(4)
+		for (int j = 0;j<islands.size();j++)
 		{
-			(*iterator)->Execute();
-			auto islandBestOrganism = (*iterator)->SelectBest();
+			auto island = islands[j];
+			island->Execute();
+			auto islandBestOrganism = island->SelectBest();
+			cout << "island best organizm " << islandBestOrganism->MeasureFitness() << "\n\r";			
 			if (bestOrganism == nullptr)
-			{
-				bestIndex = iterator - islands.begin();
+			{				
+				bestIndex = j;
 				bestOrganism = islandBestOrganism;
 			}
 			else
-			{
-				bestIndex = iterator - islands.begin();
-				bestOrganism = islandBestOrganism;
-				bestOrganism = (bestOrganism->MeasureFitness() < islandBestOrganism->MeasureFitness()) ? islandBestOrganism : bestOrganism;
+			{			
+				if (bestOrganism->MeasureFitness() > islandBestOrganism->MeasureFitness())
+				{
+					bestIndex = j;
+					bestOrganism = islandBestOrganism;
+				}				 
 			}
 		}
+		
+		cout << bestOrganism->MeasureFitness() << "\n\r";
+		
 		for (auto iterator = islands.begin(); iterator != islands.end(); iterator++)
 		{
 			if (iterator - islands.begin() != bestIndex)

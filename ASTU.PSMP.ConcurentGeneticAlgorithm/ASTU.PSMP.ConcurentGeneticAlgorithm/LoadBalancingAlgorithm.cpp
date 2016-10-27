@@ -14,14 +14,14 @@ LoadBalancingAlgorithm::~LoadBalancingAlgorithm()
 
 shared_ptr<BalancerAlgorithmOrganism> LoadBalancingAlgorithm::CreateOrganism()
 {
-	auto result = shared_ptr<BalancerAlgorithmOrganism>(new BalancerAlgorithmOrganism(this->tasks, this->PCCount));
+	auto result = shared_ptr<BalancerAlgorithmOrganism>(new BalancerAlgorithmOrganism(this->tasks, GeneticAlgorithmParameters::PCCount));
 	result->Initialize();
 	return result;
 }
 
 std::pair<shared_ptr<BalancerAlgorithmOrganism>, shared_ptr<BalancerAlgorithmOrganism>> LoadBalancingAlgorithm::ProduceChildren(shared_ptr<BalancerAlgorithmOrganism> parent1, shared_ptr<BalancerAlgorithmOrganism> parent2)
 {
-	return BalancerAlgorithmOrganism::ProduceChildren(parent1, parent2, this->tasks, this->PCCount);
+	return BalancerAlgorithmOrganism::ProduceChildren(parent1, parent2, this->tasks, GeneticAlgorithmParameters::PCCount);
 }
 
 shared_ptr<BalancerAlgorithmOrganism> LoadBalancingAlgorithm::ProduceMutant(shared_ptr<BalancerAlgorithmOrganism> organism)
