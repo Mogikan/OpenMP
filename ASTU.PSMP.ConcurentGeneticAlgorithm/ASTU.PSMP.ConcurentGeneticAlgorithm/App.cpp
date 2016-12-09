@@ -6,7 +6,7 @@ using namespace std;
 
 int main()
 {
-	cout << "Hello world\n";
+	cout << "Started\n\r";
 	srand(time(NULL));
 	std::shared_ptr<GeneticAlgorithmParameters> geneticParameters(new GeneticAlgorithmParameters());
 	geneticParameters->SetInitialPopulationSize(120);

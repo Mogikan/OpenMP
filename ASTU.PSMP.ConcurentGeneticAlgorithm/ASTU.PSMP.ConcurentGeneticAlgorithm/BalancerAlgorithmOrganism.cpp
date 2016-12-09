@@ -154,12 +154,11 @@ double BalancerAlgorithmOrganism::MeasureFitness()
 	//WriteToDebugOutput("Good result\n\r");
 	//WriteToDebugOutput(ToString(maxExecutionTime + penalty));
 	//WriteToDebugOutput("\n\r");
-	return maxExecutionTime + penalty;
+	return maxExecutionTime;
 }
 
 shared_ptr<PCTaskDescriptorList> GetTaskPC(int taskNumber, std::list<shared_ptr<PCTaskDescriptorList>> newPCList)
 {
-
 	for (auto iterator = newPCList.begin(); iterator != newPCList.end(); ++iterator)
 	{
 		if ((*iterator)->ContainsTask(taskNumber))

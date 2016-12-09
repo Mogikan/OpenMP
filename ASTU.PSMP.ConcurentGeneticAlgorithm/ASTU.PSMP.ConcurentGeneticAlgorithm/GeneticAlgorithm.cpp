@@ -52,11 +52,6 @@ void GeneticAlgorithm::Execute()
 	for (int i = 0; i < geneticParameters->GetGenerationCount(); i++)
 	{
 		ExecuteStep();
-		//auto best = SelectBest();
-		////WriteToDebugOutput(ToString(
-		//cout<<best->MeasureFitness()<<"\n\r";
-		////));
-		//WriteToDebugOutput("\n\r");
 	}
 }
 
